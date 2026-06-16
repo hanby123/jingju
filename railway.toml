@@ -1,0 +1,8 @@
+[railway]
+  builder = "nixpacks"
+  language = "python"
+
+[deploy]
+  startCommand = "pip install -r requirements.txt && gunicorn app:app --bind 0.0.0.0:$PORT"
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 10
