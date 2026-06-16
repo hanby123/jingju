@@ -1,0 +1,200 @@
+{% extends "layout.html" %}
+{% block title %}戏韵万象 · 京剧数据可视分析{% endblock %}
+
+{% block content %}
+<!-- 英雄区域 -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title"><i class="fas fa-mask"></i> 戏韵万象</h1>
+        <p class="hero-subtitle">京剧数据可视分析项目 · ChinaVis 2026</p>
+        <p class="hero-desc">
+            基于 44 部经典京剧剧本的多维度数据可视化分析平台，探索角色网络、行当分布、主题共现与叙事结构的深层规律。
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('browse') }}" class="btn btn-primary">
+                <i class="fas fa-folder-open"></i> 浏览项目
+            </a>
+            <a href="{{ url_for('upload') }}" class="btn btn-outline">
+                <i class="fas fa-upload"></i> 上传文件
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 统计概览 -->
+<section class="stats-section">
+    <h2 class="section-title"><i class="fas fa-chart-bar"></i> 项目概览</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(82, 177, 107, 0.15);">
+                <i class="fas fa-file-code" style="color: #52b16b;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.file_count }}</span>
+                <span class="stat-label">源文件总数</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(82, 140, 200, 0.15);">
+                <i class="fab fa-python" style="color: #528cc8;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.py_files }}</span>
+                <span class="stat-label">Python 脚本</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(232, 103, 139, 0.15);">
+                <i class="fas fa-image" style="color: #e8678b;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.image_files }}</span>
+                <span class="stat-label">可视化图表</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(245, 165, 91, 0.15);">
+                <i class="fas fa-database" style="color: #f5a55b;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.data_files }}</span>
+                <span class="stat-label">数据文件</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(156, 100, 200, 0.15);">
+                <i class="fas fa-hdd" style="color: #9c64c8;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ get_size_str(stats.total_size) }}</span>
+                <span class="stat-label">项目总大小</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: rgba(46, 160, 150, 0.15);">
+                <i class="fas fa-cloud-upload-alt" style="color: #2ea096;"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.upload_count }}</span>
+                <span class="stat-label">已上传文件</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 项目结构 -->
+<section class="structure-section">
+    <h2 class="section-title"><i class="fas fa-sitemap"></i> 项目架构</h2>
+    <div class="structure-grid">
+        <div class="structure-card">
+            <div class="structure-header">
+                <i class="fas fa-chart-line" style="color: #52b16b;"></i>
+                <h3>shujukeshihua</h3>
+            </div>
+            <p>Streamlit 可视化应用 — 包含数据集总览、行当分布、角色关系网络、主题分布、叙事结构和联动分析等 6 大模块。</p>
+            <div class="structure-tags">
+                <span>Python</span><span>Streamlit</span><span>PyVis</span><span>WordCloud</span>
+            </div>
+        </div>
+        <div class="structure-card">
+            <div class="structure-header">
+                <i class="fas fa-chart-pie" style="color: #e8678b;"></i>
+                <h3>shujukeshihua2</h3>
+            </div>
+            <p>ECharts 高交互前端 — 含京剧介绍、角色网络(可搜索高亮)、行当题材堆叠图、主题词簇、叙事分析和综合热力图。</p>
+            <div class="structure-tags">
+                <span>ECharts</span><span>HTML/CSS</span><span>JavaScript</span>
+            </div>
+        </div>
+        <div class="structure-card">
+            <div class="structure-header">
+                <i class="fas fa-tools" style="color: #f5a55b;"></i>
+                <h3>shujuyuchuli</h3>
+            </div>
+            <p>数据处理与预处理工具 — PDF 文本提取、Excel 表格插入等数据清洗与转换脚本。</p>
+            <div class="structure-tags">
+                <span>Python</span><span>PDF</span><span>Excel</span>
+            </div>
+        </div>
+        <div class="structure-card">
+            <div class="structure-header">
+                <i class="fas fa-globe" style="color: #528cc8;"></i>
+                <h3>website (当前)</h3>
+            </div>
+            <p>项目上传与管理网站 — 浏览项目代码结构、上传文件、管理上传资源。</p>
+            <div class="structure-tags">
+                <span>Flask</span><span>HTML/CSS</span><span>Python</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 可视化预览 -->
+<section class="preview-section">
+    <h2 class="section-title"><i class="fas fa-images"></i> 可视化展示</h2>
+    <div class="preview-grid">
+        <div class="preview-card">
+            <img src="{{ url_for('static', filename='img/preview/role_network.png') }}" alt="角色网络图"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect fill=%22%23f0e5d5%22 width=%22300%22 height=%22200%22/><text fill=%22%23997755%22 font-size=%2214%22 x=%2250%22 y=%22100%22>角色关系网络图</text></svg>'">
+            <div class="preview-info">
+                <h4>角色关系网络</h4>
+                <p>基于京剧剧本的角色共现关系网络</p>
+            </div>
+        </div>
+        <div class="preview-card">
+            <img src="{{ url_for('static', filename='img/preview/heatmap.png') }}" alt="热力图"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect fill=%22%23f0e5d5%22 width=%22300%22 height=%22200%22/><text fill=%22%23997755%22 font-size=%2214%22 x=%2250%22 y=%22100%22>行当-题材热力图</text></svg>'">
+            <div class="preview-info">
+                <h4>行当·题材热力图</h4>
+                <p>行当细分类型与题材交叉分析</p>
+            </div>
+        </div>
+        <div class="preview-card">
+            <img src="{{ url_for('static', filename='img/preview/theme.png') }}" alt="主题频次"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect fill=%22%23f0e5d5%22 width=%22300%22 height=%22200%22/><text fill=%22%23997755%22 font-size=%2214%22 x=%2250%22 y=%22100%22>主题频次统计图</text></svg>'">
+            <div class="preview-info">
+                <h4>主题频次统计</h4>
+                <p>高频主题词及其在剧目中的分布</p>
+            </div>
+        </div>
+        <div class="preview-card">
+            <img src="{{ url_for('static', filename='img/preview/narrative.png') }}" alt="叙事结构"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22><rect fill=%22%23f0e5d5%22 width=%22300%22 height=%22200%22/><text fill=%22%23997755%22 font-size=%2214%22 x=%2250%22 y=%22100%22>叙事结构分析图</text></svg>'">
+            <div class="preview-info">
+                <h4>叙事结构分析</h4>
+                <p>各题材平均场次与剧情节奏分析</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 快速上传 -->
+<section class="quick-upload-section">
+    <h2 class="section-title"><i class="fas fa-upload"></i> 快速上传</h2>
+    <div class="quick-upload-card">
+        <p>支持上传 Python 脚本（.py）、数据文件（.xlsx/.csv/.json）、图片（.png/.jpg）、HTML 文件等。</p>
+        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" class="quick-upload-form">
+            <div class="file-input-wrapper">
+                <input type="file" name="files" multiple id="quickUpload" hidden>
+                <label for="quickUpload" class="file-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>点击选择文件</span>
+                </label>
+                <span id="quickFileCount" class="file-count">未选择文件</span>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-arrow-up"></i> 上传
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('quickUpload')?.addEventListener('change', function(e) {
+    const count = e.target.files.length;
+    document.getElementById('quickFileCount').textContent = count > 0 ? `已选 ${count} 个文件` : '未选择文件';
+});
+</script>
+{% endblock %}

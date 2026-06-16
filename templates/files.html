@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block title %}已上传文件{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1><i class="fas fa-file-alt"></i> 已上传文件</h1>
+    <p>管理已上传到服务器的所有文件。</p>
+</section>
+
+<section class="files-section">
+    {% if files %}
+    <div class="files-toolbar">
+        <div class="files-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="fileSearch" placeholder="搜索文件名..." oninput="filterUploadedFiles(this.value)">
+        </div>
+        <span class="files-count">{{ files | length }} 个文件</span>
+    </div>
+
+    <div class="files-grid">
+        {% for file in files %}
+        <div class="file-card" data-name="{{ file.name | lower }}">
+            <div class="file-icon">
+                {% set ext_icons = {
+                    'py': ['fa-file-code', '#52b16b'],
+                    'xlsx': ['fa-file-excel', '#1d6f42'],
+                    'xls': ['fa-file-excel', '#1d6f42'],
+                    'csv': ['fa-file-csv', '#2ea096'],
+                    'json': ['fa-file-code', '#f5a55b'],
+                    'png': ['fa-file-image', '#e8678b'],
+                    'jpg': ['fa-file-image', '#e8678b'],
+                    'jpeg': ['fa-file-image', '#e8678b'],
+                    'gif': ['fa-file-image', '#e8678b'],
+                    'svg': ['fa-file-image', '#e8678b'],
+                    'html': ['fa-file-code', '#528cc8'],
+                    'css': ['fa-file-code', '#528cc8'],
+                    'js': ['fa-file-code', '#e8c800'],
+                    'pdf': ['fa-file-pdf', '#d43f1f'],
+                    'txt': ['fa-file-alt', '#997755'],
+                    'md': ['fa-file-alt', '#997755']
+                } %}
+                {% set icon_info = ext_icons.get(file.ext, ['fa-file', '#997755']) %}
+                <i class="fas {{ icon_info[0] }}" style="color: {{ icon_info[1] }};"></i>
+            </div>
+            <div class="file-info">
+                <h4 class="file-name" title="{{ file.name }}">{{ file.name }}</h4>
+                <div class="file-meta">
+                    <span><i class="fas fa-circle"></i> {{ file.ext | upper }}</span>
+                    <span><i class="fas fa-weight"></i> {{ file.size }}</span>
+                    <span><i class="fas fa-clock"></i> {{ file.time }}</span>
+                </div>
+            </div>
+            <div class="file-actions">
+                <a href="{{ url_for('download', filename=file.name) }}" class="btn-icon" title="下载">
+                    <i class="fas fa-download"></i>
+                </a>
+                <form action="{{ url_for('delete', filename=file.name) }}" method="post" style="display:inline;"
+                      onsubmit="return confirm('确定要删除 {{ file.name }} 吗？')">
+                    <button type="submit" class="btn-icon btn-icon-danger" title="删除">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h3>还没有上传文件</h3>
+        <p>点击下方按钮上传你的项目文件</p>
+        <a href="{{ url_for('upload') }}" class="btn btn-primary">
+            <i class="fas fa-upload"></i> 上传文件
+        </a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function filterUploadedFiles(query) {
+    query = query.toLowerCase().trim();
+    const cards = document.querySelectorAll('.file-card');
+    cards.forEach(card => {
+        const name = card.dataset.name || '';
+        card.style.display = !query || name.includes(query) ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

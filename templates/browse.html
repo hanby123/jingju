@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block title %}项目文件浏览{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1><i class="fas fa-folder-tree"></i> 项目文件浏览</h1>
+    <p>查看京剧数据可视化项目的完整目录结构。</p>
+</section>
+
+<section class="browse-section">
+    <div class="browse-container">
+        <div class="browse-toolbar">
+            <div class="browse-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="fileSearch" placeholder="搜索文件或目录..." oninput="filterFiles(this.value)">
+            </div>
+            <div class="browse-info" id="browseInfo">
+                <span><i class="fas fa-folder"></i> <span id="folderCount">0</span> 个目录</span>
+                <span><i class="fas fa-file"></i> <span id="fileCount">0</span> 个文件</span>
+            </div>
+        </div>
+
+        <div class="file-tree">
+            <ul class="tree-root">
+                <li class="tree-item folder open">
+                    <div class="tree-node" onclick="toggleFolder(this)">
+                        <i class="fas fa-folder-open"></i>
+                        <span class="tree-name">数据可视化竞赛源代码 (根目录)</span>
+                    </div>
+                    <ul class="tree-children">
+                    {% for node in tree %}
+                        {{ render_node(node) | safe }}
+                    {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% macro render_node(node) %}
+{% if node.type == 'folder' %}
+<li class="tree-item folder">
+    <div class="tree-node" onclick="toggleFolder(this)">
+        <i class="fas fa-folder"></i>
+        <span class="tree-name">{{ node.name }}</span>
+    </div>
+    {% if node.children %}
+    <ul class="tree-children">
+        {% for child in node.children %}
+        {{ render_node(child) | safe }}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</li>
+{% else %}
+{% set ext = node.ext | lower %}
+{% set icon_map = {
+    'py': 'fa-file-code', 'xlsx': 'fa-file-excel', 'xls': 'fa-file-excel',
+    'csv': 'fa-file-csv', 'json': 'fa-file-code', 'png': 'fa-file-image',
+    'jpg': 'fa-file-image', 'jpeg': 'fa-file-image', 'gif': 'fa-file-image',
+    'svg': 'fa-file-image', 'html': 'fa-file-code', 'css': 'fa-file-code',
+    'js': 'fa-file-code', 'pdf': 'fa-file-pdf', 'txt': 'fa-file-alt',
+    'md': 'fa-file-alt', 'ttf': 'fa-font', 'xml': 'fa-file-code',
+    'iml': 'fa-file-code', 'gitignore': 'fa-file-alt'
+} %}
+{% set icon = icon_map.get(ext, 'fa-file') %}
+<li class="tree-item file">
+    <div class="tree-node file-node">
+        <i class="fas {{ icon }} file-icon-{{ ext }}"></i>
+        <span class="tree-name">{{ node.name }}</span>
+        <span class="tree-size">{{ node.size }}</span>
+    </div>
+</li>
+{% endif %}
+{% endmacro %}
+
+{% block extra_scripts %}
+<script>
+function toggleFolder(el) {
+    const li = el.closest('li.folder');
+    if (!li) return;
+    li.classList.toggle('open');
+    const icon = el.querySelector('.fa-folder, .fa-folder-open');
+    if (icon) {
+        icon.className = li.classList.contains('open') ? 'fas fa-folder-open' : 'fas fa-folder';
+    }
+}
+
+function filterFiles(query) {
+    query = query.toLowerCase().trim();
+    const items = document.querySelectorAll('.tree-item');
+    let visibleFolders = 0;
+    let visibleFiles = 0;
+
+    items.forEach(item => {
+        const name = item.querySelector('.tree-name')?.textContent?.toLowerCase() || '';
+        const matches = !query || name.includes(query);
+        item.style.display = matches ? '' : 'none';
+        if (matches) {
+            if (item.classList.contains('folder')) visibleFolders++;
+            else visibleFiles++;
+        }
+    });
+
+    document.getElementById('folderCount').textContent = visibleFolders;
+    document.getElementById('fileCount').textContent = visibleFiles;
+}
+
+window.addEventListener('load', () => filterFiles(''));
+</script>
+{% endblock %}

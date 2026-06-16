@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block title %}上传文件{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1><i class="fas fa-upload"></i> 上传文件</h1>
+    <p>上传项目相关文件到服务器。支持多种文件格式。</p>
+</section>
+
+<section class="upload-section">
+    <div class="upload-card">
+        <div class="upload-area" id="dropZone">
+            <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>拖拽文件到此处或点击上传</h3>
+                <p class="upload-hint">支持 .py, .xlsx, .json, .csv, .png, .jpg, .html 等格式</p>
+                <div class="upload-actions">
+                    <input type="file" name="files" multiple id="fileInput" hidden>
+                    <label for="fileInput" class="btn btn-primary">
+                        <i class="fas fa-folder-open"></i> 选择文件
+                    </label>
+                    <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                        <i class="fas fa-arrow-up"></i> 上传
+                    </button>
+                </div>
+                <div class="file-list" id="fileList"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="upload-info">
+        <h3><i class="fas fa-info-circle"></i> 上传说明</h3>
+        <ul>
+            <li><strong>支持格式：</strong> Python 脚本 (.py)、Excel 数据 (.xlsx/.xls/.csv)、JSON 数据、图片 (.png/.jpg/.gif/.svg)、HTML/CSS/JS 文件、文本文件 (.txt/.pdf/.md)</li>
+            <li><strong>大小限制：</strong> 单个文件最大 100MB</li>
+            <li><strong>文件管理：</strong> 上传后可查看、下载和删除已上传的文件</li>
+            <li><strong>文件重名：</strong> 如果文件已存在，会自动添加时间戳后缀</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+const submitBtn = document.getElementById('submitBtn');
+let selectedFiles = [];
+
+// 拖拽事件
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer.files);
+    addFiles(files);
+});
+
+// 选择文件
+fileInput.addEventListener('change', (e) => {
+    addFiles(Array.from(e.target.files));
+});
+
+function addFiles(files) {
+    selectedFiles = files;
+    updateFileList();
+}
+
+function updateFileList() {
+    if (selectedFiles.length === 0) {
+        fileList.innerHTML = '';
+        submitBtn.disabled = true;
+        return;
+    }
+
+    let html = '<h4>已选择 ' + selectedFiles.length + ' 个文件:</h4><ul>';
+    selectedFiles.forEach(f => {
+        const size = f.size > 1024*1024
+            ? (f.size/1024/1024).toFixed(1) + ' MB'
+            : (f.size/1024).toFixed(1) + ' KB';
+        html += `<li><i class="fas fa-file"></i> ${f.name} <span class="file-size">(${size})</span></li>`;
+    });
+    html += '</ul>';
+    fileList.innerHTML = html;
+    submitBtn.disabled = false;
+}
+</script>
+{% endblock %}
